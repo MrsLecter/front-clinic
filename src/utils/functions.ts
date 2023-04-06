@@ -10,7 +10,7 @@ export const getQueryString = ({
     case "City":
       const queryByCity = gql`
         query getClinicsByCity($input: String!) {
-          nameClinic(clinicName: $input) {
+          cityClinic(city: $input) {
             clinicName
             adress
             aboutClinic
