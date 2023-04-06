@@ -17,6 +17,7 @@ const TabMap: React.FC<ITabMapProps> = ({
   activeClinic,
   setActiveClinic,
 }) => {
+  const height = (window.screen.height * 76) / 100 - 32;
   const newCenter = [lat ? lat : 50.4547, lng ? lng : 30.5238];
   const [center, setCenter] = useState<number[]>(newCenter);
 
@@ -27,21 +28,14 @@ const TabMap: React.FC<ITabMapProps> = ({
 
   return (
     <Map
-      height={530}
+      height={height}
       center={center as [number, number]}
       defaultZoom={16}
       onBoundsChanged={({ center }) => {
         setCenter(center);
       }}
     >
-      {activeClinic && (
-        <Marker
-          width={80}
-          color={"#12b886"}
-          anchor={center as [number, number]}
-        />
-      )}
-      {!!activeClinic &&
+      {activeClinic &&
         allAvaliableData.map((avaliableClinic, index) => {
           if (avaliableClinic.adress !== activeClinic) {
             return (
@@ -49,6 +43,16 @@ const TabMap: React.FC<ITabMapProps> = ({
                 key={index}
                 width={30}
                 color={"#da1f35"}
+                anchor={[avaliableClinic.lat, avaliableClinic.lng]}
+                onClick={() => setActiveClinic(avaliableClinic.adress)}
+              />
+            );
+          } else if (avaliableClinic.adress === activeClinic) {
+            return (
+              <Marker
+                key={index}
+                width={80}
+                color={"#12b886"}
                 anchor={[avaliableClinic.lat, avaliableClinic.lng]}
                 onClick={() => setActiveClinic(avaliableClinic.adress)}
               />

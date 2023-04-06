@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import css from "styled-jsx/css";
 
 export const StyledTabs = styled.div`
   width: 100%;
@@ -66,7 +67,7 @@ export const StyledContent = styled.div<{
   }
 
   div:last-child {
-    margin-top: 16px;
+    margin-top: ${(props) => (props.isMap ? "0px" : "16px")};
     overflow: ellipsis;
   }
 `;

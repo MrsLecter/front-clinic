@@ -12,7 +12,7 @@ export const StyledResultsItem = styled.div<{ isActive: boolean }>`
   cursor: pointer;
 
   div {
-    margin: 4px 0px;
+    margin: 1% 0px;
   }
 
   div:first-child {
