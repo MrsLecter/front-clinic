@@ -17,7 +17,7 @@ const TabMap: React.FC<ITabMapProps> = ({
   activeClinic,
   setActiveClinic,
 }) => {
-  const height = (window.screen.height * 76) / 100 - 32;
+  const height = (document.documentElement.scrollHeight * 71) / 100;
   const newCenter = [lat ? lat : 50.4547, lng ? lng : 30.5238];
   const [center, setCenter] = useState<number[]>(newCenter);
 
