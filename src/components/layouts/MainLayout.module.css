@@ -1,7 +1,14 @@
 .mainLayout {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    max-height: 100vh;
     padding: 28px;
-    background: "#fffefe";
+    background: "#ffffff";
+    overflow:hidden;
+}
+
+@media (max-width: 920px) {
+    .mainLayout {
+    overflow: auto;
+    }
 }
