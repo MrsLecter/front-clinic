@@ -44,7 +44,7 @@ export const StyledContent = styled.div<{
   padding: ${(props) => (props.isMap ? "0px" : "16px")};
   border: 1px solid black;
   border-top: none;
-  overflow: auto;
+  overflow: hidden;
 
   h2 {
     font-size: 18px;
