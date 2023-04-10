@@ -1,6 +1,8 @@
-import styled from "styled-components";
 import Head from "next/head";
 import classes from "./MainLayout.module.css";
+import Image from "next/image";
+import Link from "next/link";
+import Search from "../search/Search";
 
 const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
@@ -18,6 +20,20 @@ const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <meta name="description" content="Help you find the nearest clinic" />
         <meta name="og:title" content="Clinics" />
       </Head>
+      <div className={classes.mainHeader}>
+        <div>
+          <Search />
+        </div>
+        <div>
+          <Image
+            width={40}
+            height={40}
+            src="/images/logo.png"
+            alt="lambda_logo.png"
+            priority
+          />
+        </div>
+      </div>
       {children}
     </div>
   );

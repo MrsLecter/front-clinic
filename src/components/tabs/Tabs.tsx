@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ApolloError } from "@apollo/client";
 import { IResponseData } from "@/types/commonTypes";
 import {
   StyledTabs,
@@ -10,24 +9,20 @@ import {
 import TabMap from "../tabMap/TabMap";
 
 interface ITabsProps {
-  isLoading: boolean;
-  isError: ApolloError | undefined;
-  activeClinic: string;
-  allAvaliableData: IResponseData[];
+  allClinics: IResponseData[];
   setActiveClinic: (clinic: string) => void;
-  data: IResponseData[];
+  activeClinic: string;
 }
 
 const Tabs: React.FC<ITabsProps> = ({
-  isLoading,
-  isError,
+  allClinics,
   activeClinic,
-  data,
-  allAvaliableData,
   setActiveClinic,
 }) => {
   const [isFirstActive, toggleIsFirstActive] = useState<boolean>(true);
-  const clinicData = data[0];
+  const clinicData = allClinics.filter(
+    (item) => item.adress === activeClinic
+  )[0];
 
   return (
     <StyledTabs>
@@ -46,25 +41,19 @@ const Tabs: React.FC<ITabsProps> = ({
         </StyledButton>
       </StyledButtonsContainer>
       <StyledContent isActiveTab={isFirstActive} isMap={true}>
-        {isLoading && <h2>Loading...</h2>}
-        {isError && <h2>An error occured...</h2>}
-        {!isLoading && !isError && (
-          <TabMap
-            lat={clinicData ? clinicData.lat : null}
-            lng={clinicData ? clinicData.lng : null}
-            activeClinic={activeClinic}
-            allAvaliableData={allAvaliableData}
-            setActiveClinic={setActiveClinic}
-          />
-        )}
+        <TabMap
+          lat={clinicData.lat}
+          lng={clinicData.lng}
+          activeClinic={activeClinic}
+          allAvaliableData={allClinics}
+          setActiveClinic={setActiveClinic}
+        />
       </StyledContent>
       <StyledContent isActiveTab={!isFirstActive} isMap={false}>
         {!clinicData && (
           <h2>Select a clinic to display more detailed information</h2>
         )}
-        {isLoading && <h2>Loading...</h2>}
-        {isError && <h2>An error occured...</h2>}
-        {!isLoading && !isError && clinicData && (
+        {clinicData && (
           <>
             <div>{clinicData.clinicName}</div>
             <div>

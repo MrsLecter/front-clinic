@@ -1,0 +1,62 @@
+.checkboxContainer {
+  width: 100%;
+  height: 27px;
+  margin-top: 18px;
+  padding-left: 37px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.checkboxContainer label {
+  height: 19px;
+  min-width: 65px;
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  overflow: ellipsis;
+}
+
+.checkboxContainer label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkboxContainer span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: lightgrey;
+}
+
+.checkboxContainer span:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkboxContainer label input:checked~span:after {
+  display: block;
+}
+
+.checkboxContainer label span:after {
+  content: "\002717";
+  left: -4px;
+  top: -4px;
+  width: 18px;
+  height: 18px;
+  font-size: 28px;
+  font-weight: 300;
+}

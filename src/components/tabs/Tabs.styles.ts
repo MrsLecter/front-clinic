@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import css from "styled-jsx/css";
 
 export const StyledTabs = styled.div`
   width: 100%;

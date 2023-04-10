@@ -14,3 +14,9 @@ export interface IResponseData {
 }
 
 export type TSearchParams = "City" | "State" | "ZIP" | "Clinic name" | "Suburb";
+export type TQueryOptions =
+  | "city"
+  | "clinicName"
+  | "state"
+  | "suburb"
+  | "postal";

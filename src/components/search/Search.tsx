@@ -1,68 +1,33 @@
-import {
-  StyledCheckboxContainer,
-  StyledSearchContainer,
-} from "./Search.styles";
-import searchIcon from "../../../public/icons/search.svg";
-import Image from "next/image";
+import React from "react";
+import classes from "./Search.module.css";
 import { SEARCH_PARAMS } from "../../../constants";
-import { TSearchParams } from "@/types/commonTypes";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import CheckboxContainer from "./checkboxContainer/CheckboxContainer";
+import SearchForm from "./searchForm/SearchForm";
+import { useRouter } from "next/router";
 
-interface ISearchProps {
-  inputString: string;
-  option: string;
-  changeOptionHandler: (newOption: TSearchParams) => void;
-  searchInputHandler: (searchString: string) => void;
-}
-
-const Search: React.FC<ISearchProps> = ({
-  inputString,
-  option,
-  changeOptionHandler,
-  searchInputHandler,
-}) => {
+const Search: React.FC = () => {
+  const router = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
+  const [option, setOption] = useState<string>("City");
 
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    searchInputHandler(searchInput);
+  const searchHandler = () => {
+    router.replace("/", `?type=${option}&search=${searchInput}`);
   };
 
   return (
-    <StyledSearchContainer>
-      <form name="search-form" onSubmit={(e) => handleFormSubmit(e)}>
-        <button type="submit">
-          <Image
-            width={30}
-            height={30}
-            src={searchIcon}
-            alt="search-icon.svg"
-          />
-        </button>
-        <input
-          onChange={(e) => setSearchInput(e.target.value)}
-          type="text"
-          placeholder={!!inputString ? inputString : "Search..."}
-          name="search"
-          maxLength={300}
-        />
-      </form>
-      <StyledCheckboxContainer>
-        {SEARCH_PARAMS.map((checkbox) => {
-          return (
-            <label key={checkbox}>
-              {checkbox}
-              <input
-                onChange={() => changeOptionHandler(checkbox as TSearchParams)}
-                type="checkbox"
-                checked={option === checkbox}
-              />
-              <span></span>
-            </label>
-          );
-        })}
-      </StyledCheckboxContainer>
-    </StyledSearchContainer>
+    <div className={classes.searchContainer}>
+      <SearchForm
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        handleSearch={searchHandler}
+      />
+      <CheckboxContainer
+        option={option}
+        params={SEARCH_PARAMS}
+        optionChangeHandler={setOption}
+      />
+    </div>
   );
 };
 

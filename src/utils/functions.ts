@@ -1,112 +1,56 @@
 import { gql, DocumentNode } from "@apollo/client";
-import { TSearchParams } from "@/types/commonTypes";
+import { TQueryOptions, TSearchParams } from "@/types/commonTypes";
 
-export const getQueryString = ({
-  option,
-}: {
-  option: TSearchParams;
-}): DocumentNode => {
-  switch (option) {
+export const getQueryOption = (option: TSearchParams): TQueryOptions => {
+  const optionShorted = option ? option.substring(0, 6) : "";
+
+  switch (optionShorted) {
     case "City":
-      const queryByCity = gql`
-        query getClinicsByCity($input: String!) {
-          cityClinic(city: $input) {
-            clinicName
-            adress
-            aboutClinic
-            zip
-            email
-            suburb
-            state
-            city
-            website
-            phone
-            lat
-            lng
-          }
-        }
-      `;
-      return queryByCity;
+      return "city";
+    case "Clinic":
+      return "clinicName";
     case "State":
-      const queryByState = gql`
-        query getClinicsByState($input: String!) {
-          stateClinic(state: $input) {
-            clinicName
-            adress
-            aboutClinic
-            zip
-            email
-            suburb
-            state
-            city
-            website
-            phone
-            lat
-            lng
-          }
-        }
-      `;
-      return queryByState;
-
-    case "ZIP":
-      const queryByZip = gql`
-        query getClinicsByZip($input: String!) {
-          postalClinic(postal: $input) {
-            clinicName
-            adress
-            aboutClinic
-            zip
-            email
-            suburb
-            state
-            city
-            website
-            phone
-            lat
-            lng
-          }
-        }
-      `;
-      return queryByZip;
-    case "Clinic name":
-      const queryByName = gql`
-        query getClinicsByName($input: String!) {
-          nameClinic(clinicName: $input) {
-            clinicName
-            adress
-            aboutClinic
-            zip
-            email
-            suburb
-            state
-            city
-            website
-            phone
-            lat
-            lng
-          }
-        }
-      `;
-      return queryByName;
+      return "state";
     case "Suburb":
-      const queryBySuburb = gql`
-        query getClinicsBySuburb($input: String!) {
-          suburbClinic(suburb: $input) {
-            clinicName
-            adress
-            aboutClinic
-            zip
-            email
-            suburb
-            state
-            city
-            website
-            phone
-            lat
-            lng
-          }
-        }
-      `;
-      return queryBySuburb;
+      return "suburb";
+    case "ZIP":
+      return "postal";
+    default:
+      return "city";
   }
+};
+
+export const getQueryString = (option: TQueryOptions): DocumentNode => {
+  return gql`
+    query getClinics($input: String!) {
+      findClinic(searchField: $input, searchType: ${option}) {
+        clinicName
+        adress
+        aboutClinic
+        zip
+        email
+        suburb
+        state
+        city
+        website
+        phone
+        lat
+        lng
+      }
+    }
+  `;
+};
+
+export const getSearchParamsObject = (
+  querySring: string
+): { [key: string]: string } => {
+  const paramsArr = querySring.substring(2).split("&");
+  const paramsObj: { [key: string]: string } = {};
+
+  for (let pair of paramsArr) {
+    const [key, value] = pair.split("=");
+    paramsObj[key] = value;
+  }
+
+  return paramsObj;
 };

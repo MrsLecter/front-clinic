@@ -4,7 +4,7 @@ export const StyledResultsItem = styled.div<{ isActive: boolean }>`
   width: 100%;
   min-height: 25%;
   padding: 16px;
-  background-color: ${(props) => (props.isActive ? "#12b886" : "lightgrey")};
+  background-color: ${(props) => (props.isActive ? "#12b886" : "#e7e6e6")};
   border-bottom: 1px solid black;
   border-right: 3px solid transparent;
   border-left: 3px solid transparent;
@@ -27,8 +27,12 @@ export const StyledResultsItem = styled.div<{ isActive: boolean }>`
   }
 
   &:hover {
-    background-color: #12b886;
+    background-color: #b0b0b0;
     border-right: 3px solid black;
     border-left: 3px solid black;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 `;

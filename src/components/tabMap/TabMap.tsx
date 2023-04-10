@@ -11,19 +11,25 @@ interface ITabMapProps {
 }
 
 const TabMap: React.FC<ITabMapProps> = ({
-  lat = 50.4547,
-  lng = 30.5238,
+  lat,
+  lng,
   allAvaliableData,
   activeClinic,
   setActiveClinic,
 }) => {
   const height = (document.documentElement.clientHeight * 77) / 100 - 40;
-  const newCenter = [lat ? lat : 50.4547, lng ? lng : 30.5238];
+  const newCenter = [lat || 50.4547, lng || 30.5238];
   const [center, setCenter] = useState<number[]>(newCenter);
 
   useEffect(() => {
     const newCenter = [lat ? lat : 50.4547, lng ? lng : 30.5238];
     setCenter(newCenter);
+
+    const newActiveClinic = allAvaliableData.filter(
+      (item) => item.lat === lat && item.lng === lng
+    )[0];
+
+    setActiveClinic(newActiveClinic.adress);
   }, [lat, lng]);
 
   return (

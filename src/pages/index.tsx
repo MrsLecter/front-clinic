@@ -1,82 +1,70 @@
-import Results from "@/components/results/Results";
-import Search from "@/components/search/Search";
-import Tabs from "@/components/tabs/Tabs";
-import { IResponseData } from "@/types/commonTypes";
-import { getQueryString } from "@/utils/functions";
-import Image from "next/image";
-import Link from "next/link";
+import { StyledNotificationMessage } from "@/styles/index.styles";
+import { StyledContainer } from "@/components/resultsContainer/ResultsContainer.styled";
+import { IResponseData, TSearchParams } from "@/types/commonTypes";
+import {
+  getQueryOption,
+  getQueryString,
+  getSearchParamsObject,
+} from "@/utils/functions";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
-import { TSearchParams } from "@/types/commonTypes";
-import { StyledHeader, StyledContainer } from "@/styles/index.styles";
+import Image from "next/image";
+import ResultsContainer from "@/components/resultsContainer/ResultsContainer";
 
 export default function Home() {
-  const [activeClinic, setActiveClinic] = useState<string>("");
-  const [searchOption, setSearchOption] = useState<TSearchParams>("City");
-  const [searchString, setSearhString] = useState<string>("");
-  const { data, loading, error } = useQuery<{
-    response: IResponseData[];
-  }>(getQueryString({ option: searchOption }), {
-    variables: { input: searchString },
+  const router = useRouter();
+
+  const [params, setParams] = useState<{
+    [key: string]: string;
+  }>({
+    type: "City",
+    search: "",
   });
 
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
+  useEffect(() => {
+    if (router.isReady) {
+      setParams(getSearchParamsObject(router.asPath));
+    }
+  }, [router.asPath]);
 
-  if (error) {
-    return <h2>An error occured. Try again</h2>;
-  }
+  const { data, loading, error } = useQuery<{
+    response: IResponseData[];
+  }>(getQueryString(getQueryOption(params.type as TSearchParams)), {
+    variables: { input: params.search || "" },
+  });
 
-  if (data) {
-    const response = Object.values(data)[0];
-    let activeClinicData: IResponseData[] = response.filter(
-      (item) => item.adress === activeClinic
-    );
-
-    return (
-      <>
-        <StyledHeader>
-          <div>
-            <Search
-              inputString={searchString}
-              option={searchOption}
-              changeOptionHandler={setSearchOption}
-              searchInputHandler={setSearhString}
-            />
-          </div>
-          <div>
-            <Link href="/">
+  if (router.isReady) {
+    if (data) {
+      const response = Object.values(data)[0];
+      return (
+        <>
+          {!loading && !error && response && (
+            <ResultsContainer data={response} />
+          )}
+        </>
+      );
+    } else {
+      return (
+        <StyledContainer>
+          {loading && (
+            <StyledNotificationMessage>
               <Image
-                width={40}
-                height={40}
-                src="/images/logo.png"
-                alt="lambda_logo.png"
-                priority
+                width={30}
+                height={30}
+                src="/icons/loader.gif"
+                alt="search-icon.svg"
               />
-            </Link>
-          </div>
-        </StyledHeader>
-        {response && (
-          <StyledContainer>
-            <Results
-              isLoading={loading}
-              isError={error}
-              searchResults={response}
-              activeNow={activeClinic}
-              setChosenClinic={setActiveClinic}
-            />
-            <Tabs
-              setActiveClinic={setActiveClinic}
-              allAvaliableData={response}
-              isLoading={loading}
-              isError={error}
-              activeClinic={activeClinic}
-              data={activeClinicData}
-            />
-          </StyledContainer>
-        )}
-      </>
-    );
+              <h2>Loading...</h2>
+            </StyledNotificationMessage>
+          )}
+          {error && (
+            <StyledNotificationMessage>
+              <h2>An error occured. Try again</h2>
+            </StyledNotificationMessage>
+          )}
+        </StyledContainer>
+      );
+    }
   }
 }
